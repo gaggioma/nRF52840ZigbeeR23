@@ -3,7 +3,7 @@ The taget of this project is to develop a Zigbee End Device using Xiao nRF52840 
 
 Below i exaplain and describe all i've done to create them.
 
-##Software requirements
+## Software requirements
 1) Develop nRF SoC require [nRF SDK Connect](https://nrfconnectdocs.nordicsemi.com/ncs/latest/nrf/index.html) which provide all libraries (basically Zephyr) and evironment to develop and flash applications.
 
 *  In my case i used VS Code extention which provide all you need to develop via VS Code editor.
@@ -24,6 +24,6 @@ Below i exaplain and describe all i've done to create them.
 3) Flash device.
    
 
-##Hardware requirements
+## Hardware requirements
 
 ### readme under construction... 🚧🛠️⏳🔄🔜
