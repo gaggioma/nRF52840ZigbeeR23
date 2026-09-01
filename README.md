@@ -4,14 +4,14 @@ The taget of this project is to develop a Zigbee End Device using Xiao nRF52840 
 Below i exaplain and describe all i've done to create them.
 
 ## Software requirements
-### Develop nRF SoC require [nRF SDK Connect](https://nrfconnectdocs.nordicsemi.com/ncs/latest/nrf/index.html) which provide all libraries (basically Zephyr) and evironment to develop and flash applications.
+Develop nRF SoC require [nRF SDK Connect](https://nrfconnectdocs.nordicsemi.com/ncs/latest/nrf/index.html) which provide all libraries (basically Zephyr) and evironment to develop and flash applications.
 
   *  In my case i used VS Code extention which provide all you need to develop via VS Code editor.
     [Here](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-VS-Code/Tutorials?lang=en#infotabs) a tutorial i follow to install nRF SDK via VS Code.
   
   * Others documents like [this](https://academy.nordicsemi.com/courses/nrf-connect-sdk-fundamentals/lessons/lesson-1-nrf-connect-sdk-introduction/topic/exercise-1-1/) explain how to install and configure nRF SDK Connect         extention.
 
-### To develop Zigbee device, nRF SDK require [Zigbee R23 Add On](https://nrfconnectdocs.nordicsemi.com/addons/zigbee-r23/latest/index.html#), basically it use the ZBOSS Zigbee stack.
+To develop Zigbee device, nRF SDK require [Zigbee R23 Add On](https://nrfconnectdocs.nordicsemi.com/addons/zigbee-r23/latest/index.html#), basically it use the ZBOSS Zigbee stack.
 [Here](https://nrfconnectdocs.nordicsemi.com/addons/ncs-zigbee/latest/setup.html#software-requirements) the documentation to get them. Simply this procedure clone a git repository (workspace) in which you can develop Zigbee applicatins.
 
   * With VS Code enter in root af this worksapace (be carfully to this so, otherwise the application build procedure will miss the essentials libraries).
@@ -21,7 +21,7 @@ Below i exaplain and describe all i've done to create them.
   
   * After that you can run buil process.
 
-## Flash device.
+Flash device.
    
 
 ## Hardware requirements
