@@ -39,7 +39,7 @@ In this device i used 2 clusters definition:
  1) [Binary Input](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group___z_b___z_c_l___b_i_n_a_r_y___i_n_p_u_t.html);
  2) [Power Configuration](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group___z_b___z_c_l___p_o_w_e_r___c_o_n_f_i_g.html).
 
-In Binary Input cluster definition, i modified the attributes assignment to allow the definition of DESCRIPTION filed like this:
+In Binary Input cluster definition, i modified the attributes assignment to allow the definition of DESCRIPTION field like this:
 ```
 #define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_BINARY_INPUT_DESCRIPTION_ID(data_ptr) \
 {                                                                   \
@@ -77,11 +77,18 @@ In the Power Configuration cluster, by default the battery voltage field is not 
 }
 ```
 
-
-
 ## Zigbee2MQTT config
+I noticed that ony binary clusters are configured to show up by default. But clusters like Power Config are not configured in that way.
+
+To see all clusters of my device in Zigbee2MQTT console, an [external converter](https://www.zigbee2mqtt.io/advanced/more/external_converters.html) is mandatory.
+In zigbee2MQTT folder you can find the code used in my project.
 
 ## Power optimization
+Zigbee end devices are notable for their vey low power consumption.
+To obtain this i applied these suggestions found in documentation:
+- [Sleepy end device configuration](https://nrfconnectdocs.nordicsemi.com/addons/ncs-zigbee/latest/configuring.html#sleepy-end-device-behavior);
+- [Power saving during sleep](https://nrfconnectdocs.nordicsemi.com/addons/ncs-zigbee/latest/configuring.html#power-saving-during-sleep);
+- [Power management module](https://nrfconnectdocs.nordicsemi.com/ncs/latest/nrf/test_and_optimize/optimizing/power_general.html#enable-device-power-management-module) to shutdown unused drivers.
 
 
 ### readme under construction... 🚧🛠️⏳🔄🔜
