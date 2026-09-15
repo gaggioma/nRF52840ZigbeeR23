@@ -1,5 +1,5 @@
 # Xiao nRF52840 + nRF Sdk Connect + Zigbee R23 + Zigbee2MQTT 🚀
-The target of this project is to develop a Zigbee End Device using Xiao nRF52840 SoC.
+The target of this project is to develop a Zigbee End Device using Xiao nRF52840 SoC, exposing battery percentage and battery voltage attribute.
 
 Below i explain and describe all i've done to create them.
 
