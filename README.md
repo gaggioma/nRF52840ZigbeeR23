@@ -39,9 +39,42 @@ In this device i used 2 clusters definition:
  1) [Binary Input](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group___z_b___z_c_l___b_i_n_a_r_y___i_n_p_u_t.html);
  2) [Power Configuration](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group___z_b___z_c_l___p_o_w_e_r___c_o_n_f_i_g.html).
 
-In Binary Input cluster definition i modified the attributes assignment to allow the definition of Description filed:
+In Binary Input cluster definition, i modified the attributes assignment to allow the definition of DESCRIPTION filed like this:
 ```
-write code
+#define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_BINARY_INPUT_DESCRIPTION_ID(data_ptr) \
+{                                                                   \
+  ZB_ZCL_ATTR_BINARY_INPUT_DESCRIPTION_ID,                          \
+  ZB_ZCL_ATTR_TYPE_CHAR_STRING,                                     \
+  ZB_ZCL_ATTR_ACCESS_READ_ONLY | ZB_ZCL_ATTR_ACCESS_WRITE_OPTIONAL, \
+  (ZB_ZCL_NON_MANUFACTURER_SPECIFIC),                               \
+  (void*) data_ptr                                                  \
+}
+
+#define ZB_ZCL_DECLARE_BINARY_INPUT_ATTRIB_LIST_EXT(                                     \
+    attr_list, out_of_service, present_value, status_flag, description)                           \
+  ZB_ZCL_START_DECLARE_ATTRIB_LIST_CLUSTER_REVISION(attr_list, ZB_ZCL_BINARY_INPUT)  \
+  ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BINARY_INPUT_OUT_OF_SERVICE_ID, (out_of_service)) \
+  ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BINARY_INPUT_PRESENT_VALUE_ID, (present_value))   \
+  ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BINARY_INPUT_STATUS_FLAG_ID, (status_flag))       \
+  ZB_ZCL_SET_ATTR_DESC(ZB_ZCL_ATTR_BINARY_INPUT_DESCRIPTION_ID, (description))       \
+  ZB_ZCL_FINISH_DECLARE_ATTRIB_LIST
+```
+
+In the Power Configuration cluster, by default the battery voltage field is not set like REPORTABLE, so i modified the cluster definition like this:
+```
+//Set VOLTAGE_ID reportable
+#ifdef ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_VOLTAGE_ID
+#undef ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_VOLTAGE_ID
+#endif
+
+#define ZB_SET_ATTR_DESCR_WITH_ZB_ZCL_ATTR_POWER_CONFIG_BATTERY_VOLTAGE_ID(data_ptr, bat_num) \
+{                                                               \
+  ZB_ZCL_ATTR_POWER_CONFIG_BATTERY##bat_num##_VOLTAGE_ID,       \
+  ZB_ZCL_ATTR_TYPE_U8,                                          \
+  ZB_ZCL_ATTR_ACCESS_READ_ONLY  | ZB_ZCL_ATTR_ACCESS_REPORTING,                                 \
+  (ZB_ZCL_NON_MANUFACTURER_SPECIFIC),                           \
+  (void*) data_ptr                                              \
+}
 ```
 
 
