@@ -34,5 +34,21 @@ For this project i used Xiao nRF52840 buyed [here](https://it.aliexpress.com/ite
 
 For all pinouts and hw specs i used [this](https://wiki.seeedstudio.com/XIAO_BLE/). 
 
+## Zigbee clusters tips
+In this device i used 2 clusters definition:
+ 1) [Binary Input](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group___z_b___z_c_l___b_i_n_a_r_y___i_n_p_u_t.html);
+ 2) [Power Configuration](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group___z_b___z_c_l___p_o_w_e_r___c_o_n_f_i_g.html).
+
+In Binary Input cluster definition i modified the attributes assignment to allow the definition of Description filed:
+```
+write code
+```
+
+
+
+## Zigbee2MQTT config
+
+## Power optimization
+
 
 ### readme under construction... 🚧🛠️⏳🔄🔜
