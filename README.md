@@ -22,8 +22,9 @@ Below i explain and describe all i've done to create them.
     <picture>
       <img src="/images/build_1.PNG" alt="build_conf" style="width:auto;">
     </picture>
-     In the type of build choose "no sysbuild", this permit to create .uf2 build file suitable for Xiao nRF52840 default bootloader.
-     Make sure to have in the project the file `pm_static.yml` which define the memory map of firmware that will be installed.    
+
+    In the type of build choose "no sysbuild", this permit to create .uf2 build file suitable for Xiao nRF52840 default bootloader.
+    Make sure to have in the project the file `pm_static.yml` which define the memory map of firmware that will be installed.    
    * After that you can run build process.
 
 4) Flash device.
