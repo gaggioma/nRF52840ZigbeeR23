@@ -37,6 +37,9 @@
 //Used for power_down_unused_ram()
 #include <ram_pwrdn.h>
 
+//reboot
+#include <power/reboot.h>
+
 LOG_MODULE_REGISTER(app, LOG_LEVEL_INF); //LOG_LEVEL_INF
 
 #define MANUFACTOR_CODE ZB_ZCL_NON_MANUFACTURER_SPECIFIC
@@ -625,16 +628,53 @@ static void identify_cb(zb_bufid_t bufid)
  */
 void zboss_signal_handler(zb_bufid_t bufid)
 {
+	/* 1. Retrieve the signal headers from the buffer ID */
+    zb_zdo_app_signal_hdr_t  *sig_header = ZB_GET_APP_SIGNAL_HDR(bufid);
+    zb_zdo_app_signal_type_t  sig_type   = zb_get_app_signal_type(sig_header);
+    zb_ret_t                  status     = ZB_GET_APP_SIGNAL_STATUS(bufid);
+
 	/* Update network status LED. */
-	if(ZB_JOINED()){
+	/*if(ZB_JOINED()){
 		//LOG_INF("zboss_signal_handler JOINED");
 		set_inactive_gpio(&led_red);
 	}else{
 		//LOG_INF("zboss_signal_handler NOT");	
 		set_active_gpio(&led_red);
-	}
+	}*/
 	set_inactive_gpio(&led_green);
 	set_inactive_gpio(&led_blue);
+
+	//Manage message
+	/* 2. Custom Application Event Handling */
+    switch (sig_type)
+    {
+        case ZB_BDB_SIGNAL_DEVICE_FIRST_START:
+        case ZB_BDB_SIGNAL_DEVICE_REBOOT:
+            if (status == RET_OK) {
+                // Device successfully initialized or joined network
+				set_inactive_gpio(&led_red);
+            } else {
+                // Initial startup or network join failed
+				set_active_gpio(&led_red);
+            }
+            break;
+
+        case ZB_BDB_SIGNAL_STEERING:
+            if (status == RET_OK) {
+                // Network steering process succeeded (e.g. router opened pairing window)
+            }
+            break;
+
+        case ZB_ZDO_SIGNAL_LEAVE:
+            // Device has left the network
+			//Try a reboot to rejoin network. A device can leave the network for congestioned
+			sys_reboot(SYS_REBOOT_WARM);
+            break;
+
+        default:
+            /* Don't explicitly block unhandled events */
+            break;
+    }
 
 	/* No application-specific behavior is required.
 	 * Call default signal handler.

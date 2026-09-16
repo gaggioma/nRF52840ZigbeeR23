@@ -17,8 +17,11 @@ Below i explain and describe all i've done to create them.
    [Here](https://nrfconnectdocs.nordicsemi.com/addons/ncs-zigbee/latest/setup.html#software-requirements) the documentation to get them. This procedure clone a git repository (workspace) in which you can develop       Zigbee applications. [Here](https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/index.html) you can find all APIs used in Zigbee stack.
 
    * With VS Code enter in root af this worksapace (be carefully to this so, otherwise samples will not be found).
-   * Click create new application and serch by "ncs", it will display all examples, and choose one. Save the new project into the root of workspace, otherwise the application build procedure will miss the essentials libraries.
-   * Add build configuration like this: show image.
+   * Click create new application -> Copy a sample -> select SDK version "ncs-zigbee" -> search "ncs-zigbee", it will display all examples, and choose one. Save the new project into the root of workspace, otherwise the application build procedure will miss the essentials libraries.
+   * Add build configuration like this:
+    <picture>
+      <img src="/images/build_1.PNG" alt="build_conf" style="width:auto;">
+    </picture>
      In the type of build choose "no sysbuild", this permit to create .uf2 build file suitable for Xiao nRF52840 default bootloader.
      Make sure to have in the project the file `pm_static.yml` which define the memory map of firmware that will be installed.    
    * After that you can run build process.
