@@ -651,24 +651,29 @@ void zboss_signal_handler(zb_bufid_t bufid)
         case ZB_BDB_SIGNAL_DEVICE_FIRST_START:
         case ZB_BDB_SIGNAL_DEVICE_REBOOT:
             if (status == RET_OK) {
-                // Device successfully initialized or joined network
+                // Device successfully initialized or joined network from reboot
 				set_inactive_gpio(&led_red);
             } else {
-                // Initial startup or network join failed
+                // Initial startup network join failed
 				set_active_gpio(&led_red);
             }
             break;
 
         case ZB_BDB_SIGNAL_STEERING:
             if (status == RET_OK) {
-                // Network steering process succeeded (e.g. router opened pairing window)
+                // Network steering process succeeded (e.g. end device pairing ok)
+				set_inactive_gpio(&led_red);
+            } else {
+                // Rejoin failed
+				set_active_gpio(&led_red);
             }
             break;
 
         case ZB_ZDO_SIGNAL_LEAVE:
             // Device has left the network
-			//Try a reboot to rejoin network. A device can leave the network for congestioned
-			sys_reboot(SYS_REBOOT_WARM);
+			//Try a rejoin procedure
+			//sys_reboot(SYS_REBOOT_WARM);
+			bdb_start_top_level_commissioning(ZB_BDB_NETWORK_STEERING);
             break;
 
         default:
