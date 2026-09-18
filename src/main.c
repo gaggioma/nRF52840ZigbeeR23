@@ -38,7 +38,7 @@
 #include <ram_pwrdn.h>
 
 //reboot
-#include <power/reboot.h>
+//#include <power/reboot.h>
 
 LOG_MODULE_REGISTER(app, LOG_LEVEL_INF); //LOG_LEVEL_INF
 
