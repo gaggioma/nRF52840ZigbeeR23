@@ -629,18 +629,10 @@ static void identify_cb(zb_bufid_t bufid)
 void zboss_signal_handler(zb_bufid_t bufid)
 {
 	/* 1. Retrieve the signal headers from the buffer ID */
-    zb_zdo_app_signal_hdr_t  *sig_header = ZB_GET_APP_SIGNAL_HDR(bufid);
-    zb_zdo_app_signal_type_t  sig_type   = zb_get_app_signal_type(sig_header);
+    zb_zdo_app_signal_hdr_t  *sig_header = NULL;
+    zb_zdo_app_signal_type_t  sig_type   = zb_get_app_signal(bufid, &sig_header);
     zb_ret_t                  status     = ZB_GET_APP_SIGNAL_STATUS(bufid);
 
-	/* Update network status LED. */
-	/*if(ZB_JOINED()){
-		//LOG_INF("zboss_signal_handler JOINED");
-		set_inactive_gpio(&led_red);
-	}else{
-		//LOG_INF("zboss_signal_handler NOT");	
-		set_active_gpio(&led_red);
-	}*/
 	set_inactive_gpio(&led_green);
 	set_inactive_gpio(&led_blue);
 
@@ -649,9 +641,13 @@ void zboss_signal_handler(zb_bufid_t bufid)
     switch (sig_type)
     {
         case ZB_BDB_SIGNAL_DEVICE_FIRST_START:
+			LOG_INF("ZB_BDB_SIGNAL_DEVICE_FIRST_START OK");
+			break;
+
         case ZB_BDB_SIGNAL_DEVICE_REBOOT:
             if (status == RET_OK) {
                 // Device successfully initialized or joined network from reboot
+				LOG_INF("ZB_BDB_SIGNAL_DEVICE_REBOOT OK");
 				set_inactive_gpio(&led_red);
             } else {
                 // Initial startup network join failed
@@ -662,6 +658,7 @@ void zboss_signal_handler(zb_bufid_t bufid)
         case ZB_BDB_SIGNAL_STEERING:
             if (status == RET_OK) {
                 // Network steering process succeeded (e.g. end device pairing ok)
+				LOG_INF("ZB_BDB_SIGNAL_STEERING OK");
 				set_inactive_gpio(&led_red);
             } else {
                 // Rejoin failed
@@ -672,7 +669,8 @@ void zboss_signal_handler(zb_bufid_t bufid)
         case ZB_ZDO_SIGNAL_LEAVE:
             // Device has left the network
 			//Try a rejoin procedure
-			//sys_reboot(SYS_REBOOT_WARM);
+			LOG_INF("ZB_ZDO_SIGNAL_LEAVE OK");
+			//Starts the specified device commissioning steps.
 			bdb_start_top_level_commissioning(ZB_BDB_NETWORK_STEERING);
             break;
 
@@ -1290,10 +1288,14 @@ int main(void)
 	ZB_AF_SET_IDENTIFY_NOTIFICATION_HANDLER(APP_ALARM_EXT_NORD_EP, identify_cb);
 
 	//turn rx off when deep sleep
-	zigbee_configure_sleepy_behavior(true);
+	if(IS_ENABLED(CONFIG_PM_DEVICE)){
+		LOG_INF("Enabled zigbee_configure_sleepy_behavior");
+		zigbee_configure_sleepy_behavior(true);
+	}
 	
 	/* Power off unused sections of RAM to lower device power consumption. */
 	if (IS_ENABLED(CONFIG_RAM_POWER_DOWN_LIBRARY)) {
+		LOG_INF("Enabled power_down_unused_ram");
 		power_down_unused_ram();
 	}
 
@@ -1318,17 +1320,17 @@ int main(void)
 
 	configureReportingAlarm(APP_ALARM_EXT_NORD_EP);
 	startReportingAlarm(APP_ALARM_EXT_NORD_EP);
-
-	//GPIO callback
-	gpio_callback_init();
-	
-	//Init timer callback
-	timer_callback_init();
 				
 	while(1){
 		if(ZB_JOINED()){
 			LOG_INF("Zigbee join ok");
 
+			//Enable GPIO callback
+			gpio_callback_init();
+			
+			//Start timer callback
+			timer_callback_init();
+			
 			//Read and report state for the first time
 			read_all_states_for_first_time();
 			battery_report();
