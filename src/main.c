@@ -515,15 +515,15 @@ static void identify_cb(zb_bufid_t bufid)
 	LOG_INF("identify_cb bufid: %u", bufid);
 
 	if (bufid) {
-		/* Schedule a self-scheduling function that will toggle the LED. */
+		//Schedule a self-scheduling function that will toggle the LED.
 		ZB_SCHEDULE_APP_CALLBACK(toggle_identify_led, bufid);
 		LOG_INF("Schedule a self-scheduling ep_id: %u", bufid);
 	} else {
-		/* Cancel the toggling function alarm and turn off LED. */
+		//Cancel the toggling function alarm and turn off LED.
 		zb_err_code = ZB_SCHEDULE_APP_ALARM_CANCEL(toggle_identify_led, ZB_ALARM_ANY_PARAM);
 		ZVUNUSED(zb_err_code);
 
-		/* Update network status/idenitfication LED. */
+		//Update network status/idenitfication LED.
 		if (ZB_JOINED()) {
 			LOG_INF("Joined ep_id: %u", bufid);
 			set_inactive_gpio(&led_green);
@@ -532,9 +532,8 @@ static void identify_cb(zb_bufid_t bufid)
 		} else {
 			LOG_INF("Not joined ep_id: %u", bufid);
 			set_inactive_gpio(&led_green);
-			set_active_gpio(&led_red);
-			set_inactive_gpio(&led_blue);			
-
+			set_active_gpio(&led_red); //red led on
+			set_inactive_gpio(&led_blue);
 		}
 	}
 }
@@ -651,7 +650,9 @@ void zboss_signal_handler(zb_bufid_t bufid)
 				set_inactive_gpio(&led_red);
             } else {
                 // Initial startup network join failed
+          		//See https://ncsdoc.z6.web.core.windows.net/zboss-r23/4.2.2.4/group__zboss__bdb__comm__start.html#ga0b54e93a19cadc5fc02df8eab18ecd45
 				set_active_gpio(&led_red);
+				bdb_start_top_level_commissioning(ZB_BDB_NETWORK_STEERING);
             }
             break;
 
@@ -663,6 +664,9 @@ void zboss_signal_handler(zb_bufid_t bufid)
             } else {
                 // Rejoin failed
 				set_active_gpio(&led_red);
+				//restart steering after a while
+				k_sleep(K_SECONDS(10));
+				bdb_start_top_level_commissioning(ZB_BDB_NETWORK_STEERING);
             }
             break;
 
@@ -1248,7 +1252,7 @@ int main(void)
 	
 	//Reset led.
 	configure_gpio_out(&led_blue);
-	set_inactive_gpio(&led_blue);
+	set_active_gpio(&led_blue); //On start turn ON blue led. After join it will be switched off
 	configure_gpio_out(&led_green);
 	set_inactive_gpio(&led_green);
 	configure_gpio_out(&led_red);
